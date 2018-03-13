@@ -56,14 +56,12 @@ server = couchdb.Server("http://" + worker_defaults['COUCH_DATABASE'].split('/')
 @pytest.fixture(scope='function')
 def db(request):
     name = worker_defaults['COUCH_DATABASE'].split('/')[3]
+    # name = 'test_{}'.format(uuid.uuid4().hex)
 
     documents = getattr(request, 'param', None)
 
-    def delete():
-        del server[name]
-
     if name in server:
-        delete()
+        server.delete(name)
 
     data_base = server.create(name)
 
@@ -71,20 +69,36 @@ def db(request):
         for doc in documents:
             data_base.save(doc)
             
-    request.addfinalizer(delete)
+    request.addfinalizer(lambda: server.delete(name))
 
     return data_base
 
 
-@pytest.fixture(scope='function')
+@pytest.fixture(scope='class')
 def db2(request):
     name = 'test_{}'.format(uuid.uuid4().hex)
-    db = server.create(name)
-    sync_design_chronograph(db)
-    sync_design(db)
-    request.cls.db = db
-    request.addfinalizer(lambda : server.delete(name))
-    return db
+
+    if name in server:
+        server.delete(name)
+
+    data_base = server.create(name)
+
+    sync_design_chronograph(data_base)
+    sync_design(data_base)
+
+    request.cls.data_base = data_base
+    request.addfinalizer(lambda: server.delete(name))
+    return data_base
+
+
+@pytest.fixture(scope='function')
+def save_doc(request):
+    doc = getattr(request, 'param', None)
+
+    request.cls.data_base.save(doc)
+
+    request.addfinalizer(lambda: request.cls.data_base.delete(doc))
+    return None
 
 
 @pytest.fixture(scope='function')

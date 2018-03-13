@@ -50,6 +50,16 @@ CONF_FILES_FOLDER = os.path.join(PWD, "data")
 with open(PWD + '/data/public_document.json') as _file:
     test_public_document = json.load(_file)
 
+test_public_document_with_mode = dict(test_public_document)
+test_public_document_with_mode['mode'] = 'test_mode'
+
+test_public_document_end_date = dict(test_public_document)
+test_public_document_end_date['endDate'] = \
+    datetime.now(tzlocal()).replace(microsecond=0).isoformat()
+
+test_public_document_current_stage = dict(test_public_document)
+test_public_document_current_stage['current_stage'] = 0
+
 
 @contextlib.contextmanager
 def update_auctionPeriod(path, auction_type='simple',
@@ -104,6 +114,7 @@ couch_url_parts.append(error_port)
 test_bridge_config_error_port['main']['couch_url'] = ':'.join(couch_url_parts)
 
 
+# TODO: find usage and delete if not used.
 @contextlib.contextmanager
 def put_test_doc(db, doc):
     id, rev = db.save(doc)
