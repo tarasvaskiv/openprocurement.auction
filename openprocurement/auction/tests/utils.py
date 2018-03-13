@@ -9,6 +9,7 @@ import logging
 from datetime import datetime, timedelta
 import tempfile
 from dateutil.tz import tzlocal
+from openprocurement.auction.helpers.system import get_ip_address
 
 
 def read_file_from_json(path):
@@ -238,10 +239,10 @@ def get_tenders_dummy(tender_data_list):
     return a
 
 
-# TODO: change host
 test_client = \
-    TestClient('http://0.0.0.0:{port}'.
-               format(port=test_chronograph_config['main'].get('web_app')))
+    TestClient('http://{ip}:{port}'.
+               format(ip=get_ip_address(),
+                      port=test_chronograph_config['main'].get('web_app')))
 
 
 def job_is_added():
