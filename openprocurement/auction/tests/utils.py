@@ -47,8 +47,8 @@ API_EXTRA = {'opt_fields': 'status,auctionPeriod,lots,procurementMethodType',
 CONF_FILES_FOLDER = os.path.join(PWD, "data")
 
 
-# with open('data/public_document.json') as _file:
-#     test_public_document = json.load(_file)
+with open(PWD + '/data/public_document.json') as _file:
+    test_public_document = json.load(_file)
 
 
 @contextlib.contextmanager

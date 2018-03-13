@@ -3,11 +3,13 @@ import json
 import logging
 import couchdb
 import datetime
+import uuid
 from openprocurement.auction.databridge import ResourceFeeder
 from gevent import spawn
 from openprocurement.auction import core as core_module
 from openprocurement.auction.chronograph import AuctionsChronograph
 from openprocurement.auction.databridge import AuctionsDataBridge
+from openprocurement.auction.design import sync_design_chronograph, sync_design
 from openprocurement.auction.helpers.chronograph import \
     MIN_AUCTION_START_TIME_RESERV
 from openprocurement.auction.tests.utils import get_tenders_dummy
@@ -48,10 +50,11 @@ test_log_config = {
 
 logging.config.dictConfig(test_log_config)
 
+server = couchdb.Server("http://" + worker_defaults['COUCH_DATABASE'].split('/')[2])
+
 
 @pytest.fixture(scope='function')
 def db(request):
-    server = couchdb.Server("http://" + worker_defaults['COUCH_DATABASE'].split('/')[2])
     name = worker_defaults['COUCH_DATABASE'].split('/')[3]
 
     documents = getattr(request, 'param', None)
@@ -71,6 +74,17 @@ def db(request):
     request.addfinalizer(delete)
 
     return data_base
+
+
+@pytest.fixture(scope='function')
+def db2(request):
+    name = 'test_{}'.format(uuid.uuid4().hex)
+    db = server.create(name)
+    sync_design_chronograph(db)
+    sync_design(db)
+    request.cls.db = db
+    request.addfinalizer(lambda : server.delete(name))
+    return db
 
 
 @pytest.fixture(scope='function')
