@@ -93,8 +93,7 @@ def db2(request):
 
 @pytest.fixture(scope='function')
 def save_doc(request):
-    doc = getattr(request, 'param', None)
-
+    doc = dict(getattr(request, 'param', None))
     request.cls.data_base.save(doc)
 
     request.addfinalizer(lambda: request.cls.data_base.delete(doc))

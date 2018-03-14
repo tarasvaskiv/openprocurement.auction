@@ -56,7 +56,7 @@ class TestTemplateViews(object):
                                          u'mode': u'', u'api_version': save_doc['TENDERS_API_VERSION']}
 
     @pytest.mark.parametrize(
-        'save_doc', [dict(test_public_document)], indirect=['save_doc'])
+        'save_doc', [test_public_document], indirect=['save_doc'])
     def test_start_date_view(self, db2, save_doc):
         """This test checks if view returns correct 1 stage time. Utc is ignored due couchdb javascript"""
         for data in db2.view('auctions/by_startDate').rows:
@@ -66,7 +66,7 @@ class TestTemplateViews(object):
                    datetime.fromtimestamp(result_from_couchdb / 1000).time()
 
     @pytest.mark.parametrize(
-        'save_doc', [dict(test_public_document)], indirect=['save_doc'])
+        'save_doc', [test_public_document], indirect=['save_doc'])
     def test_end_date_view_1(self, db2, save_doc):
         """This test checks if view returns correct (endDate of doc) or doc.stages[0].start"""
         for data in db2.view('auctions/by_endDate').rows:
@@ -87,7 +87,7 @@ class TestTemplateViews(object):
                    datetime.fromtimestamp(result_from_couchdb / 1000).time()
 
     @pytest.mark.parametrize(
-        'save_doc', [dict(test_public_document)], indirect=['save_doc'])
+        'save_doc', [test_public_document], indirect=['save_doc'])
     def test_pre_announce_view_1(self, db2, save_doc):
         for data in db2.view('auctions/PreAnnounce').rows:
             assert data.get('key') is None
