@@ -3,7 +3,10 @@ import iso8601
 from datetime import datetime
 from openprocurement.auction.tests.utils import test_public_document, \
     test_public_document_with_mode, \
-    test_public_document_end_date, test_public_document_current_stage
+    test_public_document_end_date, test_public_document_current_stage, \
+    test_public_document_no_api_version, \
+    test_public_document_no_auction_type, \
+    test_public_document_with_procur_method_type
 
 
 class TestTemplateViews(object):
@@ -24,6 +27,33 @@ class TestTemplateViews(object):
                                          u'procurementMethodType': u'',
                                          u'auction_type': test_public_document['auction_type'],
                                          u'mode': test_public_document_with_mode['mode'], u'api_version': test_public_document['TENDERS_API_VERSION']}
+
+    @pytest.mark.parametrize(
+        'save_doc', [dict(test_public_document_no_api_version)], indirect=['save_doc'])
+    def test_chronograph_view_api_version(self, db2, save_doc):
+        for data in db2.view('chronograph/start_date').rows:
+            assert data.get('value') == {u'start': test_public_document['stages'][0]['start'],
+                                         u'procurementMethodType': u'',
+                                         u'auction_type': test_public_document['auction_type'],
+                                         u'mode': u'', u'api_version': None}
+
+    @pytest.mark.parametrize(
+        'save_doc', [dict(test_public_document_no_auction_type)], indirect=['save_doc'])
+    def test_chronograph_view_auction_type(self, db2, save_doc):
+        for data in db2.view('chronograph/start_date').rows:
+            assert data.get('value') == {u'start': test_public_document['stages'][0]['start'],
+                                         u'procurementMethodType': u'',
+                                         u'auction_type': 'default',
+                                         u'mode': u'', u'api_version': test_public_document['TENDERS_API_VERSION']}
+
+    @pytest.mark.parametrize(
+        'save_doc', [dict(test_public_document_with_procur_method_type)], indirect=['save_doc'])
+    def test_chronograph_view_procur_method_type(self, db2, save_doc):
+        for data in db2.view('chronograph/start_date').rows:
+            assert data.get('value') == {u'start': test_public_document['stages'][0]['start'],
+                                         u'procurementMethodType': test_public_document_with_procur_method_type['procurementMethodType'],
+                                         u'auction_type': test_public_document['auction_type'],
+                                         u'mode': u'', u'api_version': test_public_document['TENDERS_API_VERSION']}
 
     @pytest.mark.parametrize(
         'save_doc', [dict(test_public_document)], indirect=['save_doc'])

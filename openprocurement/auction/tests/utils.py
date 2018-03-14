@@ -60,6 +60,16 @@ test_public_document_end_date['endDate'] = \
 test_public_document_current_stage = dict(test_public_document)
 test_public_document_current_stage['current_stage'] = 0
 
+test_public_document_no_api_version = dict(test_public_document)
+del test_public_document_no_api_version['TENDERS_API_VERSION']
+
+test_public_document_no_auction_type = dict(test_public_document)
+del test_public_document_no_auction_type['auction_type']
+
+test_public_document_with_procur_method_type = dict(test_public_document)
+test_public_document_with_procur_method_type['procurementMethodType'] = \
+    'test_meth_type'
+
 
 @contextlib.contextmanager
 def update_auctionPeriod(path, auction_type='simple',
