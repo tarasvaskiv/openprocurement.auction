@@ -98,7 +98,7 @@ def save_doc(request):
     request.cls.data_base.save(doc)
 
     request.addfinalizer(lambda: request.cls.data_base.delete(doc))
-    return None
+    return doc
 
 
 @pytest.fixture(scope='function')
