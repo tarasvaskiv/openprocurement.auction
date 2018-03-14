@@ -70,6 +70,10 @@ test_public_document_with_procur_method_type = dict(test_public_document)
 test_public_document_with_procur_method_type['procurementMethodType'] = \
     'test_meth_type'
 
+test_public_document_with_future_start_stage = deepcopy(test_public_document)
+test_public_document_with_future_start_stage['stages'][0]['start'] = \
+    (datetime.now(tzlocal()) + timedelta(days=1)).isoformat()
+
 
 @contextlib.contextmanager
 def update_auctionPeriod(path, auction_type='simple',
