@@ -72,8 +72,8 @@ class TestDataBridgeRunLogInformation(object):
         """
         bridge['bridge_thread'].join(0.1)
         log_strings = self.log_capture_string.getvalue().split('\n')
-        assert (log_strings[3] == 'Start Auctions Bridge')
-        assert (log_strings[4] == 'Start data sync...')
+        assert (log_strings[2] == 'Start Auctions Bridge')
+        assert (log_strings[3] == 'Start data sync...')
 
 
 class TestDataBridgeGetTenders(object):
