@@ -122,7 +122,7 @@ with open(databridge_conf_file_path) as stream:
 
 test_bridge_config_error_port = deepcopy(test_bridge_config)
 couch_url = test_bridge_config_error_port['main']['couch_url']
-error_port = str(int(couch_url.split(':')[-1][:-1]) + 1)
+error_port = str(int(couch_url.split(':')[-1][:-1]) + 100)
 couch_url_parts = couch_url.split(':')[0:-1]
 couch_url_parts.append(error_port)
 test_bridge_config_error_port['main']['couch_url'] = ':'.join(couch_url_parts)
