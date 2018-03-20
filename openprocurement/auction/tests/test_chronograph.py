@@ -36,22 +36,22 @@ class TestChronograph(object):
         assert job_is_not_added()
         assert job_is_active()
 
-    @pytest.mark.parametrize(
-        'auction',
-        [({'time': MAX_AUCTION_START_TIME_RESERV,
-           'delta_t': datetime.timedelta(seconds=3)})], indirect=['auction'])
-    def test_listing(self, db, chronograph, auction):
-        auction.prepare_auction_document()
-        db.view('chronograph/start_date')
-
-        chronograph.join(0.1)
-
-        assert job_is_added()
-        assert job_is_not_active()
-
-        blocking_sleep(3.4)
-        assert job_is_not_added()
-        assert job_is_active()
+    # @pytest.mark.parametrize(
+    #     'auction',
+    #     [({'time': MAX_AUCTION_START_TIME_RESERV,
+    #        'delta_t': datetime.timedelta(seconds=3)})], indirect=['auction'])
+    # def test_listing(self, db, chronograph, auction):
+    #     auction.prepare_auction_document()
+    #     db.view('chronograph/start_date')
+    #
+    #     chronograph.join(0.1)
+    #
+    #     assert job_is_added()
+    #     assert job_is_not_active()
+    #
+    #     blocking_sleep(3.4)
+    #     assert job_is_not_added()
+    #     assert job_is_active()
 
     # TODO: this test needs dummy auction_worker
     # from openprocurement.auction.tests.unit.utils import test_client
